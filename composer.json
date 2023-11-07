@@ -1,0 +1,21 @@
+{
+    "name": "billar/tienda-billar",
+    "description": "creacion de una tienda online",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "sebastian mora",
+            "email": "sebastianmora1110@gmail.com"
+        }
+        
+    ],
+    "require": {
+        
+    },
+    "autoload": {
+        "psr-4": {
+            "billar\\":"src/"
+        }
+    }
+}
