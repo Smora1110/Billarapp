@@ -20,13 +20,12 @@ class usuario{
 
     public function login($nombre, $clave){
         
-        $sql = "SELECT nombre_usuario FROM `usuarios` WHERE `nombre_usuario`  = :nombre AND :clave = '123'";
+        $sql = "SELECT nombre_usuario FROM `usuarios` WHERE nombre_usuario  = :nombre AND clave = :clave";
         
         $resultado = $this->cn->prepare($sql);
         $_array = array(
             ":nombre" =>  $nombre,
-            ":clave" =>  $clave,
-
+            ":clave" =>  $clave
             
         );
 
