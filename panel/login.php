@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
     } else {
-        echo "Usuario o contraseña incorrectos";
+        header('Location: usuario_incorrecto.php');
     }
     
 }
