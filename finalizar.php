@@ -64,7 +64,6 @@ $nombre_usuario=$_SESSION['nombre_usuario'];
               </div>
               <div class="form-group">
                 <label>Mesa</label>
-                <label>Mesa</label>
                 <input value="<?php print $nombre_usuario; ?>" type="text" class="form-control" name="mesa"required>
               </div>
 
