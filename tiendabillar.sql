@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-11-2023 a las 22:35:54
+-- Tiempo de generación: 09-11-2023 a las 09:26:55
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.0.28
 
@@ -142,15 +142,22 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `titulo`, `descripcion`, `foto`, `precio`, `categoria_id`, `fecha`, `estado`) VALUES
-(1, 'GUARDIANES DE LAS GALAXIA', 'FULL ACCION', '2.jpg', 20.00, 1, '2017-09-03', 1),
-(2, 'MICKEY MOUSE', 'FULL ANIMACION', '4.jpg', 25.00, 5, '2017-09-03', 1),
-(3, 'BANANA', 'FULL AVENTURA', '6.jpg', 24.00, 4, '2017-09-03', 1),
-(4, 'BATMAN', 'FULL ACCION', 'batman.jpg', 30.00, 1, '2017-09-03', 1),
-(6, 'DEADPOOL', 'FULL ACCION', 'deadpool.jpg', 40.00, 1, '2017-09-03', 1),
-(7, 'LEGO', 'FULL ANIMADA', 'lego.jpg', 17.00, 5, '2017-09-03', 1),
-(8, 'RAMBO', 'FULL ACCION', 'rambo.jpg', 35.00, 1, '2017-09-03', 1),
-(9, 'RESIDENT', 'FULL ACCION', 'resident.jpg', 36.00, 1, '2017-09-03', 1),
-(10, 'SIMPSON', 'FULL', 'simpsons.jpg', 31.00, 4, '2017-09-03', 1);
+(15, 'Mesita billar', 'mesa de billar mini', 'mesita.webp', 150000.00, 5, '2023-11-09', 1),
+(16, 'Guante', 'guante negro billar', 'guante.webp', 15000.00, 5, '2023-11-09', 1),
+(17, 'Grissly', 'osos de goma grissly', 'grissly.webp', 5000.00, 4, '2023-11-09', 1),
+(19, 'Tictac', 'Tictacs sabor naranja', 'tiictac.webp', 3000.00, 4, '2023-11-09', 1),
+(21, 'Pringles', 'Papas pringles', 'pringles.webp', 8000.00, 2, '2023-11-09', 1),
+(22, 'Margarita', 'Papas margarita', 'margarita.webp', 2000.00, 2, '2023-11-09', 1),
+(23, 'Rizadas', 'Papas rizadas', 'rizadas.webp', 2500.00, 2, '2023-11-09', 1),
+(25, 'Heineken', 'Cerveza Heineken', 'heineken.webp', 4400.00, 3, '2023-11-09', 1),
+(26, 'Ron', 'Ron caldas', 'ron.webp', 60000.00, 3, '2023-11-09', 1),
+(27, 'Smirnof', 'Vodka smirnof', 'smirnof.webp', 75000.00, 3, '2023-11-09', 1),
+(28, 'Jaggermaister', 'Licor herbal', 'jagger.webp', 110000.00, 3, '2023-11-09', 1),
+(29, 'Power', 'bebida hidratante', 'power.webp', 4000.00, 1, '2023-11-09', 1),
+(30, 'Valle', 'Jugo del valle naranja', 'valle.webp', 3000.00, 1, '2023-11-09', 1),
+(31, 'Hit', 'Jugo hit lulo', 'hit.webp', 3400.00, 1, '2023-11-09', 1),
+(32, 'Cuatro', 'Gaseosa cuatro toronja', 'cuatro.webp', 2600.00, 1, '2023-11-09', 1),
+(33, 'Combo billar', 'Taco billar con tiza y guantes', 'combo guanter taco tiza.webp', 210000.00, 5, '2023-11-09', 1);
 
 -- --------------------------------------------------------
 
@@ -164,6 +171,16 @@ CREATE TABLE `usuarios` (
   `clave` varchar(150) NOT NULL,
   `estado` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `nombre_usuario`, `clave`, `estado`) VALUES
+(1, 'sa', '123', 1),
+(2, 'admin', '1234', 1),
+(3, 'sebas', 'sebas', 1),
+(4, 'paula', 'paula', 1);
 
 --
 -- Índices para tablas volcadas
@@ -237,13 +254,13 @@ ALTER TABLE `pedidos`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
