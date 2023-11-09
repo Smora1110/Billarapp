@@ -1,9 +1,6 @@
 <?php
 session_start();
 require 'funciones.php';
-header("Cache-Control: no-cache, no-store, must-revalidate");
-header("Pragma: no-cache");
-header("Expires: 0");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,11 +39,11 @@ header("Expires: 0");
             <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
             <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
           </svg>
-          </a> 
+        </a>
 
-          <a class="navbar-brand" href="tienda.php">BillarApp
+        <a class="navbar-brand" href="tienda.php">BillarApp
 
-          </a>
+        </a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
@@ -76,8 +73,58 @@ header("Expires: 0");
       <?php
       require 'vendor/autoload.php';
       $producto = new billar\producto;
+      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $categoria_filtrada = $_POST['filtro-categoria'];
+
+        // Construye la consulta SQL para filtrar por categoría
+        if ($categoria_filtrada !== 'todos') {
+          $sql = "SELECT productos.id, productos.titulo, productos.foto, categorias.nombre 
+                  FROM productos 
+                  INNER JOIN categorias 
+                  ON productos.categoria_id = categorias.id 
+                  WHERE categorias.nombre = :categoria";
+        } else {
+          $sql = "SELECT productos.id, productos.titulo, productos.foto, categorias.nombre 
+                  FROM productos 
+                  INNER JOIN categorias 
+                  ON productos.categoria_id = categorias.id";
+        }
+      } else {
+        // Si no se ha enviado un formulario, muestra todos los productos
+        $sql = "SELECT productos.id, productos.titulo, productos.foto, categorias.nombre 
+                FROM productos 
+                INNER JOIN categorias 
+                ON productos.categoria_id = categorias.id";
+      }
+
       $info_productos = $producto->mostrar();
+      $categorias = array();
+
+      foreach ($info_productos as $row) {
+        $categoria = $row['categoria'];
+        if (!in_array($categoria, $categorias)) {
+          $categorias[] = $categoria;
+        }
+      }
       $cantidad = count($info_productos);
+
+      ?>
+
+      <form method="POST" action="">
+        <label for="filtro-categoria">Filtrar por categoría:</label>
+        <select name="filtro-categoria" id="filtro-categoria">
+          <option value="todos">Todos</option>
+          <?php
+          foreach ($categorias as $categoria) {
+            echo "<option value=\"$categoria\">$categoria</option>";
+          }
+          ?>
+        </select>
+        <input type="submit" value="Filtrar">
+      </form>
+
+      <?php
+
       if ($cantidad > 0) {
         for ($x = 0; $x < $cantidad; $x++) {
           $item = $info_productos[$x];
@@ -107,4 +154,5 @@ header("Expires: 0");
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
+
 </html>

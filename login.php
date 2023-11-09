@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: tienda.php');
         }
 
-        echo '<script>window.location.href = "pagina-de-inicio.php";</script>';
 
     } else {
         header('Location: usuario_incorrecto.php');
