@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nombre_usuario = $_POST['nombre_usuario'];
     $clave = $_POST['clave'];
-    require '../vendor/autoload.php';
+    require 'vendor/autoload.php';
     $usuario = new billar\usuario;
     $resultado = $usuario->login($nombre_usuario, $clave);
 
@@ -19,10 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($nombre_usuario=='admin') {
             $_SESSION['nombre_usuario'] = $nombre_usuario;
-            header('Location: dashboard.php');
+            header('Location: panel/dashboard.php');
         } elseif ($nombre_usuario!=='admin'){
             $_SESSION['nombre_usuario'] = $nombre_usuario;
-            header('Location: ../index.php');
+            header('Location: tienda.php');
         }
 
     } else {

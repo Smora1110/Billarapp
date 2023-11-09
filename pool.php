@@ -70,37 +70,33 @@ require 'funciones.php';
 
     <div class="row mb-3">
       <div class="col-md-4">
-        <h2>Equipo 1</h2>
-        <p>Puntos: <span id="puntosEquipo1">0</span></p>
-        <button type="button" class="btn btn-danger" id="resetEquipo1Btn">Resetear Equipo 1</button>
+        <h2>Jugador 1</h2>
+        <p>Buenas: <span id="buenasJugador1">0</span></p>
+        <p>Malas: <span id="malasJugador1">0</span></p>
+        <p>Total Puntos: <span id="totalJugador1">0</span></p>
       </div>
       <div class="col-md-4">
-        <h2>Equipo 2</h2>
-        <p>Puntos: <span id="puntosEquipo2">0</span></p>
-        <button type="button" class="btn btn-danger" id="resetEquipo2Btn">Resetear Equipo 2</button>
-      </div>
-      <div class="col-md-4">
-        <h2>Equipo 3</h2>
-        <p>Puntos: <span id="puntosEquipo3">0</span></p>
-        <button type="button" class="btn btn-danger" id="resetEquipo3Btn">Resetear Equipo 3</button>
+        <h2>Jugador 2</h2>
+        <p>Buenas: <span id="buenasJugador2">0</span></p>
+        <p>Malas: <span id="malasJugador2">0</span></p>
+        <p>Total Puntos: <span id="totalJugador2">0</span></p>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4">
         <br><br><br>
-        <select class="form-select mb-2" id="Equipo" required>
-          <option value="Equipo1">Equipo 1</option>
-          <option value="Equipo2">Equipo 2</option>
-          <option value="Equipo3">Equipo 3</option>
+        <select class="form-select mb-2" id="Jugador" required>
+          <option value="Jugador1">Jugador 1</option>
+          <option value="Jugador2">Jugador 2</option>
         </select>
-        
+
         <select class="form-select mb-2" id="accion" required>
           <option value="sumar">Sumar Puntos</option>
           <option value="restar">Restar Puntos</option>
         </select>
         <div class="mb-3">
-            <br>
+          <br>
           <label for="cantidad" class="form-label">Cantidad:</label>
           <input type="number" class="form-control" id="cantidad" required>
         </div>
@@ -110,52 +106,61 @@ require 'funciones.php';
     </div>
   </div>
 
-  <!-- Incluye el script de Bootstrap 5 y el script Equipolizado -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Incluye el script de Bootstrap y el script para el contador de puntos -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-    // Script para manejar la actualización y el reseteo de puntos
+    // Inicializar variables para llevar un seguimiento de las buenas y malas
+    var buenasJugador1 = 0;
+    var malasJugador1 = 0;
+    var buenasJugador2 = 0;
+    var malasJugador2 = 0;
+
+    // Actualizar la pantalla con las buenas, malas y total de puntos actuales
+    function actualizarPantalla() {
+      document.getElementById("buenasJugador1").textContent = buenasJugador1;
+      document.getElementById("malasJugador1").textContent = malasJugador1;
+      document.getElementById("totalJugador1").textContent = buenasJugador1 - malasJugador1;
+      document.getElementById("buenasJugador2").textContent = buenasJugador2;
+      document.getElementById("malasJugador2").textContent = malasJugador2;
+      document.getElementById("totalJugador2").textContent = buenasJugador2 - malasJugador2;
+    }
+
+    // Script para manejar la actualización de puntos
     document.getElementById("actualizarBtn").addEventListener("click", function() {
-      var Equipo = document.getElementById("Equipo").value;
+      var Jugador = document.getElementById("Jugador").value;
       var accion = document.getElementById("accion").value;
       var cantidad = parseInt(document.getElementById("cantidad").value);
 
       if (accion === "sumar") {
-        if (Equipo === "Equipo1") {
-          var puntosEquipo1 = parseInt(document.getElementById("puntosEquipo1").textContent);
-          document.getElementById("puntosEquipo1").textContent = puntosEquipo1 + cantidad;
-        } else if (Equipo === "Equipo2") {
-          var puntosEquipo2 = parseInt(document.getElementById("puntosEquipo2").textContent);
-          document.getElementById("puntosEquipo2").textContent = puntosEquipo2 + cantidad;
-        } else if (Equipo === "Equipo3") {
-          var puntosEquipo3 = parseInt(document.getElementById("puntosEquipo3").textContent);
-          document.getElementById("puntosEquipo3").textContent = puntosEquipo3 + cantidad;
+        if (Jugador === "Jugador1") {
+          buenasJugador1 += cantidad;
+        } else if (Jugador === "Jugador2") {
+          buenasJugador2 += cantidad;
         }
       } else if (accion === "restar") {
-        if (Equipo === "Equipo1") {
-          var puntosEquipo1 = parseInt(document.getElementById("puntosEquipo1").textContent);
-          document.getElementById("puntosEquipo1").textContent = puntosEquipo1 - cantidad;
-        } else if (Equipo === "Equipo2") {
-          var puntosEquipo2 = parseInt(document.getElementById("puntosEquipo2").textContent);
-          document.getElementById("puntosEquipo2").textContent = puntosEquipo2 - cantidad;
-        } else if (Equipo === "Equipo3") {
-          var puntosEquipo3 = parseInt(document.getElementById("puntosEquipo3").textContent);
-          document.getElementById("puntosEquipo3").textContent = puntosEquipo3 - cantidad;
+        if (Jugador === "Jugador1") {
+          malasJugador1 += cantidad;
+        } else if (Jugador === "Jugador2") {
+          malasJugador2 += cantidad;
         }
       }
+
+      actualizarPantalla();
     });
 
-    // Script para resetear los puntos de las Equipos
-    document.getElementById("resetEquipo1Btn").addEventListener("click", function() {
-      document.getElementById("puntosEquipo1").textContent = "0";
+    // Script para resetear los puntos de los jugadores
+    document.getElementById("resetJugador1Btn").addEventListener("click", function() {
+      buenasJugador1 = 0;
+      malasJugador1 = 0;
+      actualizarPantalla();
     });
 
-    document.getElementById("resetEquipo2Btn").addEventListener("click", function() {
-      document.getElementById("puntosEquipo2").textContent = "0";
-    });
-
-    document.getElementById("resetEquipo3Btn").addEventListener("click", function() {
-      document.getElementById("puntosEquipo3").textContent = "0";
+    document.getElementById("resetJugador2Btn").addEventListener("click", function() {
+      buenasJugador2 = 0;
+      malasJugador2 = 0;
+      actualizarPantalla();
     });
   </script>
 </body>
+
 </html>

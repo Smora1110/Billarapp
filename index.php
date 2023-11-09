@@ -1,115 +1,76 @@
-<?php
-session_start();
-require 'funciones.php';
 
-?>
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="description" content="">
-  <meta name="author" content="">
+    <title>BillarApp</title>
 
-  <title>BillarApp</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/estilos.css">
+  </head>
 
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/estilos.css">
-</head>
+  <body>
 
-<body>
-
-  <!-- Fixed navbar -->
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="index.php">BillarApp
-
-        </a>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="">BillarApp</a>
+        </div>
+       
       </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav pull-right">
-          <li>
-            <a href="carrito.php" class="btn">CARRITO <span class="badge"><?php print cantidadproducto(); ?></span></a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="panel/cerrar_session.php">Salir</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div>
-  </nav>
+    </nav>
 
-  <div class="container" id="main">
-    <div class="row">
-      <?php
-      require 'vendor/autoload.php';
-      $producto = new billar\producto;
-      $info_productos = $producto->mostrar();
-      $cantidad = count($info_productos);
-      if ($cantidad > 0) {
-        for ($x = 0; $x < $cantidad; $x++) {
-          $item = $info_productos[$x];
-      ?>
-          <div class="col-md-3">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h1 class="text-center titulo-producto"><?php print $item['titulo'] ?></h1>
-              </div>
-              <div class="panel-body">
-                <?php
-                $foto = 'upload/' . $item['foto'];
-                if (file_exists($foto)) {
-                ?>
-                  <img src="<?php print $foto; ?>" class="img-responsive">
-                <?php } else { ?>
-                  <img src="assets/imagenes/not-found.jpg" class="img-responsive">
-                <?php } ?>
-              </div>
-              <div class="panel-footer">
-                <a href="carrito.php?id=<?php print $item['id'] ?>" class="btn btn-success btn-block">
-                  <span class="glyphicon glyphicon-shopping-cart"></span> Comprar
-                </a>
-              </div>
-            </div>
+    <div class="container" id="main">
+        <div class="main-login">
+            <form action="login.php" method="post">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="text-center">ACCESOS AL PANEL</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p class="text-center">
+                           <!-- <img src="../assets/imagenes/logo.png" alt=""> -->
+                        </p>
+                        <div class="form-group">
+                            <label>Usuario</label>
+                            <input type="text" class="form-control" name="nombre_usuario" placeholder="Usuario" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="clave" placeholder="Password" required>
+                        </div>
 
-
-          </div>
-        <?php
-        }
-      } else { ?>
-        <h4>NO HAY REGISTROS</h4>
-
-      <?php } ?>
+                        <button type="submit" class="btn btn-primary btn-block">LOGIN</button>
 
 
 
+                    </div>
+                </div>
+            </form>
+        </div>
 
-    </div>
+    </div> <!-- /container -->
 
 
-  </div> <!-- /container -->
-
-
-  <!-- Bootstrap core JavaScript
+    <!-- Bootstrap core JavaScript
     ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="assets/js/jquery.min.js"></script>
-  <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../assets/js/jquery.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
 
-</body>
-
+  </body>
 </html>

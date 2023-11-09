@@ -69,28 +69,40 @@ require 'funciones.php';
     </div>
   </nav>
 
-    <div class="container" id="main">
-        <div class="row">
-            <div class="jumbotron">
-                <p>Gracias por su compra</p>
-                <p>
-                    <a href="tienda.php">Regresar</a>
+  <div class="container" id="main">
+    <div class="row">
+      <?php
+      require 'vendor/autoload.php';
+      $producto = new billar\producto;
+      $info_productos = $producto->mostrar();
+      $cantidad = count($info_productos);
+      if ($cantidad > 0) {
+        for ($x = 0; $x < $cantidad; $x++) {
+          $item = $info_productos[$x];
+      ?>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="thumbnail">
+              <div class="caption">
+                <h3 class="text-center titulo-producto"><?php print $item['titulo'] ?></h3>
+                <img src="<?php print 'upload/' . $item['foto']; ?>" class="img-responsive">
+                <p class="text-center">
+                  <a href="carrito.php?id=<?php print $item['id'] ?>" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-shopping-cart"></span> Comprar
+                  </a>
                 </p>
+              </div>
             </div>
+          </div>
+        <?php
+        }
+      } else { ?>
+        <h4 class="text-center">NO HAY REGISTROS</h4>
+      <?php } ?>
+    </div>
+  </div> <!-- /container -->
 
-
-
-        </div>
-      
-
-    </div> <!-- /container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-
-  </body>
+  <!-- jQuery and Bootstrap JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
 </html>
