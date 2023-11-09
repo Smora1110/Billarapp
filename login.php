@@ -19,14 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($nombre_usuario=='admin') {
             $_SESSION['nombre_usuario'] = $nombre_usuario;
+            $_SESSION['logueado'] = true;
             header('Location: panel/dashboard.php');
         } elseif ($nombre_usuario!=='admin'){
             $_SESSION['nombre_usuario'] = $nombre_usuario;
+            $_SESSION['logueado'] = true;
             header('Location: tienda.php');
         }
+
+        echo '<script>window.location.href = "pagina-de-inicio.php";</script>';
 
     } else {
         header('Location: usuario_incorrecto.php');
     }
+
     
 }
