@@ -1,7 +1,7 @@
 <?php
 session_start();
 require 'funciones.php';
-
+$nombre_usuario=$_SESSION['nombre_usuario'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +64,7 @@ require 'funciones.php';
               </div>
               <div class="form-group">
                 <label>Mesa</label>
-                <input type="number" class="form-control" name="mesa" required>
+                <input value="<?php print $nombre_usuario; ?>" type="text" class="form-control" name="mesa"required>
               </div>
 
               <div class="form-group">
