@@ -51,29 +51,45 @@
 </nav>
 
 <h1>Listado de Mesas</h1>
-    <ul>
-        <?php
-        // Conexión a la base de datos
-        $conexion = new mysqli("localhost", "root", "", "tiendabillar");
+<?php
+// Conexión a la base de datos
+$conexion = new mysqli("localhost", "root", "", "tiendabillar");
 
-        // Verificar la conexión
-        if ($conexion->connect_error) {
-            die("Error de conexión: " . $conexion->connect_error);
-        }
+// Verificar la conexión
+if ($conexion->connect_error) {
+    die("Error de conexión: " . $conexion->connect_error);
+}
 
-        // Consulta para obtener la lista de mesas
-        $consulta_mesas = "SELECT id, nombre_usuario FROM usuarios WHERE nombre_usuario LIKE 'mesa%'";
-        $resultado_mesas = $conexion->query($consulta_mesas);
+// Obtener el ID de la mesa desde la URL
+$mesa_id = $_GET['mesa'];
 
-        // Mostrar la lista de mesas
-        while ($fila_mesa = $resultado_mesas->fetch_assoc()) {
-            echo "<li><a href='pedidos.php?mesa_id={$fila_mesa['id']}'>{$fila_mesa['nombre_usuario']}</a></li>";
-        }
+// Consulta para obtener el detalle del pedido para la mesa seleccionada
+$consulta_detalle_pedido = "SELECT dp.id, p.titulo, dp.precio, dp.cantidad, dp.estado 
+                           FROM detalle_pedidos dp
+                           JOIN productos p ON dp.producto_id = p.id
+                           JOIN pedidos pe ON dp.pedido_id = pe.id
+                           JOIN clientes c ON pe.cliente_id = c.id
+                           WHERE c.mesa = '$mesa'";
+$resultado_detalle_pedido = $conexion->query($consulta_detalle_pedido);
 
-        // Cerrar la conexión
-        $conexion->close();
-        ?>
-    </ul>
-    
-</body>
+// Mostrar la información del detalle del pedido
+echo "<h1>Detalle del Pedido - Mesa $mesa_id</h1>";
+echo "<table border='1'>";
+echo "<tr><th>ID</th><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Estado</th></tr>";
+
+while ($fila_detalle = $resultado_detalle_pedido->fetch_assoc()) {
+    echo "<tr>";
+    echo "<td>{$fila_detalle['id']}</td>";
+    echo "<td>{$fila_detalle['titulo']}</td>";
+    echo "<td>{$fila_detalle['precio']}</td>";
+    echo "<td>{$fila_detalle['cantidad']}</td>";
+    echo "<td>{$fila_detalle['estado']}</td>";
+    echo "</tr>";
+}
+
+echo "</table>";
+
+// Cerrar la conexión
+$conexion->close();
+?>
 </html>
