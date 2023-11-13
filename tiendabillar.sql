@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-11-2023 a las 17:22:08
+-- Tiempo de generación: 13-11-2023 a las 17:34:00
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -62,7 +62,11 @@ CREATE TABLE `clientes` (
 
 INSERT INTO `clientes` (`id`, `nombre`, `mesa`, `comentario`) VALUES
 (5, 'Paula Viviescas', 'mesa1', 'Holi'),
-(6, 'AMFAS', 'mesa1', '');
+(6, 'AMFAS', 'mesa1', ''),
+(7, 'Mateo', 'mesa2', ''),
+(8, 'Jorge', 'mesa3', ''),
+(9, 'Sebastián', 'mesa4', ''),
+(10, 'Miche', 'mesa5', '');
 
 -- --------------------------------------------------------
 
@@ -94,7 +98,16 @@ INSERT INTO `detalle_pedidos` (`id`, `pedido_id`, `producto_id`, `precio`, `cant
 (8, 3, 12, 40.00, 4, 1),
 (9, 4, 11, 17.00, 1, 1),
 (10, 5, 32, 2600.00, 3, 1),
-(11, 6, 33, 210000.00, 1, 1);
+(11, 6, 33, 210000.00, 1, 1),
+(12, 7, 32, 2600.00, 1, 1),
+(13, 7, 25, 4400.00, 1, 1),
+(14, 8, 19, 3000.00, 1, 1),
+(15, 8, 16, 15000.00, 1, 1),
+(16, 9, 28, 110000.00, 1, 1),
+(17, 9, 23, 2500.00, 1, 1),
+(18, 10, 33, 210000.00, 1, 1),
+(19, 10, 28, 110000.00, 1, 1),
+(20, 10, 23, 2500.00, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -120,7 +133,11 @@ INSERT INTO `pedidos` (`id`, `cliente_id`, `total`, `fecha`, `estado`) VALUES
 (3, 3, 160.00, '2023-11-07', 1),
 (4, 4, 17.00, '2023-11-07', 1),
 (5, 5, 7800.00, '2023-11-09', 1),
-(6, 6, 210000.00, '2023-11-13', 1);
+(6, 6, 210000.00, '2023-11-13', 1),
+(7, 7, 7000.00, '2023-11-13', 1),
+(8, 8, 18000.00, '2023-11-13', 1),
+(9, 9, 112500.00, '2023-11-13', 1),
+(10, 10, 322500.00, '2023-11-13', 1);
 
 -- --------------------------------------------------------
 
@@ -240,19 +257,19 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedidos`
 --
 ALTER TABLE `detalle_pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`

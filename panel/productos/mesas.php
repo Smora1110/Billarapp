@@ -51,45 +51,43 @@
 </nav>
 
 <h1>Listado de Mesas</h1>
-<?php
-// Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "tiendabillar");
+<ul>
+    <?php
+    // Conexión a la base de datos
+    $conexion = new mysqli("localhost", "root", "", "tiendabillar");
 
-// Verificar la conexión
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
-}
+    // Verificar la conexión
+    if ($conexion->connect_error) {
+        die("Error de conexión: " . $conexion->connect_error);
+    }
 
-// Obtener el ID de la mesa desde la URL
-$mesa_id = $_GET['mesa'];
+    // Consulta para obtener la lista de mesas y sus pedidos
+    $consulta_mesas_pedidos = "SELECT usuarios.id AS mesa_id, usuarios.nombre_usuario AS mesa_nombre, pedidos.id AS pedido_id
+                               FROM usuarios
+                               JOIN clientes ON usuarios.nombre_usuario = clientes.mesa
+                               JOIN pedidos ON clientes.id = pedidos.cliente_id";
+    
+    $resultado_mesas_pedidos = $conexion->query($consulta_mesas_pedidos);
 
-// Consulta para obtener el detalle del pedido para la mesa seleccionada
-$consulta_detalle_pedido = "SELECT dp.id, p.titulo, dp.precio, dp.cantidad, dp.estado 
-                           FROM detalle_pedidos dp
-                           JOIN productos p ON dp.producto_id = p.id
-                           JOIN pedidos pe ON dp.pedido_id = pe.id
-                           JOIN clientes c ON pe.cliente_id = c.id
-                           WHERE c.mesa = '$mesa'";
-$resultado_detalle_pedido = $conexion->query($consulta_detalle_pedido);
+    // Mostrar la lista de mesas y sus pedidos
+    while ($fila_mesa_pedido = $resultado_mesas_pedidos->fetch_assoc()) {
+        echo "<li><a href='pedidos.php?mesa_id={$fila_mesa_pedido['mesa_id']}'>{$fila_mesa_pedido['mesa_nombre']}</a></li>";
+        
+        // Si hay pedidos para esta mesa, mostrarlos
+        if ($fila_mesa_pedido['pedido_id']) {
+            echo "<ul>";
+            // Consulta para obtener los detalles del pedido
+            $consulta_detalles_pedido = "SELECT * FROM detalle_pedidos WHERE pedido_id = {$fila_mesa_pedido['pedido_id']}";
+            $resultado_detalles_pedido = $conexion->query($consulta_detalles_pedido);
+            while ($fila_detalle_pedido = $resultado_detalles_pedido->fetch_assoc()) {
+                echo "<li>{$fila_detalle_pedido['id']} - Producto: {$fila_detalle_pedido['producto_id']}, Precio: {$fila_detalle_pedido['precio']}, Cantidad: {$fila_detalle_pedido['cantidad']}</li>";
+            }
+            echo "</ul>";
+        }
+    }
 
-// Mostrar la información del detalle del pedido
-echo "<h1>Detalle del Pedido - Mesa $mesa_id</h1>";
-echo "<table border='1'>";
-echo "<tr><th>ID</th><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Estado</th></tr>";
-
-while ($fila_detalle = $resultado_detalle_pedido->fetch_assoc()) {
-    echo "<tr>";
-    echo "<td>{$fila_detalle['id']}</td>";
-    echo "<td>{$fila_detalle['titulo']}</td>";
-    echo "<td>{$fila_detalle['precio']}</td>";
-    echo "<td>{$fila_detalle['cantidad']}</td>";
-    echo "<td>{$fila_detalle['estado']}</td>";
-    echo "</tr>";
-}
-
-echo "</table>";
-
-// Cerrar la conexión
-$conexion->close();
-?>
+    // Cerrar la conexión
+    $conexion->close();
+    ?>
+</ul>
 </html>
