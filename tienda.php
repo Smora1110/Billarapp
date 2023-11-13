@@ -1,6 +1,5 @@
 <?php
 session_start();
-session_start();
 if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info'])) {
   // Redirigir a la página de inicio de sesión
   header("Location: index.php");
