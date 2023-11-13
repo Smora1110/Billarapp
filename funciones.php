@@ -1,5 +1,17 @@
 <?php
 
+// Establece la conexión a la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "tiendabillar";
+
+try {
+    $conexion = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Error en la conexión: " . $e->getMessage());
+}
 
 function agregarproducto($resultado, $id, $cantidad = 1){
     $_SESSION['carrito'][$id] = array(
