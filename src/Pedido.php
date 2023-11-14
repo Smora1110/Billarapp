@@ -2,22 +2,36 @@
 
 namespace billar;
 
-class Pedido{
+class Pedido
+{
 
     private $config;
     private $cn = null;
 
-    public function __construct(){
+    public function __construct()
+    {
 
-        $this->config = parse_ini_file(__DIR__.'/../config.ini') ;
+        $this->config = parse_ini_file(__DIR__ . '/../config.ini');
 
-        $this->cn = new \PDO( $this->config['dns'], $this->config['usuario'],$this->config['clave'],array(
+        $this->cn = new \PDO($this->config['dns'], $this->config['usuario'], $this->config['clave'], array(
             \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
         ));
-        
+    }
+    public function mostrar()
+    {
+        $sql = "SELECT p.id, nombre, mesa, total, fecha FROM pedidos p 
+        INNER JOIN clientes c ON p.cliente_id = c.id ORDER BY p.id DESC";
+
+        $resultado = $this->cn->prepare($sql);
+
+        if ($resultado->execute())
+            return  $resultado->fetchAll();
+
+        return false;
     }
 
-    public function registrar($_params){
+    public function registrar($_params)
+    {
         $sql = "INSERT INTO `pedidos`(`cliente_id`, `total`, `fecha`) 
         VALUES (:cliente_id,:total,:fecha)";
 
@@ -27,16 +41,17 @@ class Pedido{
             ":cliente_id" => $_params['cliente_id'],
             ":total" => $_params['total'],
             ":fecha" => $_params['fecha'],
-            
+
         );
 
-        if($resultado->execute($_array))
+        if ($resultado->execute($_array))
             return $this->cn->lastInsertId();
 
         return false;
     }
 
-    public function registrarDetalle($_params){
+    public function registrarDetalle($_params)
+    {
         $sql = "INSERT INTO `detalle_pedidos`(`pedido_id`, `producto_id`, `precio`, `cantidad`) 
         VALUES (:pedido_id,:producto_id,:precio,:cantidad)";
 
@@ -49,25 +64,13 @@ class Pedido{
             ":cantidad" => $_params['cantidad'],
         );
 
-        if($resultado->execute($_array))
+        if ($resultado->execute($_array))
             return  true;
 
         return false;
     }
 
-    public function mostrar()
-    {
-        $sql = "SELECT p.id, nombre, mesa, total, fecha FROM pedidos p 
-        INNER JOIN clientes c ON p.cliente_id = c.id ORDER BY p.id DESC";
 
-        $resultado = $this->cn->prepare($sql);
-
-        if($resultado->execute())
-            return  $resultado->fetchAll();
-
-        return false;
-
-    }
     public function mostrarUltimos()
     {
         $sql = "SELECT p.id, nombre, mesa, total, fecha FROM pedidos p 
@@ -75,31 +78,15 @@ class Pedido{
 
         $resultado = $this->cn->prepare($sql);
 
-        if($resultado->execute())
+        if ($resultado->execute())
             return  $resultado->fetchAll();
 
         return false;
-
     }
 
-    public function mostrarPorId($id)
-    {
-        $sql = "SELECT p.id, nombre,mesa, total, fecha FROM pedidos p 
-        INNER JOIN clientes c ON p.cliente_id = c.id WHERE p.id = :id";
 
-        $resultado = $this->cn->prepare($sql);
 
-        $_array = array(
-            ':id'=>$id
-        );
 
-        if($resultado->execute($_array ))
-            return  $resultado->fetch();
-
-        return false;
-    }
-
-    
 
     public function mostrarDetallePorIdPedido($id)
     {
@@ -116,16 +103,60 @@ class Pedido{
         $resultado = $this->cn->prepare($sql);
 
         $_array = array(
-            ':id'=>$id
+            ':id' => $id
         );
 
-        if($resultado->execute( $_array))
+        if ($resultado->execute($_array))
             return  $resultado->fetchAll();
 
         return false;
-
     }
+    public function mostrarMesas()
+    {
+        $sql = "SELECT nombre_usuario FROM usuarios WHERE estado = 0;
+        ";
 
+        $resultado = $this->cn->prepare($sql);
 
+        if ($resultado->execute())
+            return  $resultado->fetchAll();
+
+        return false;
+    }
+    public function mostrarPorId($id)
+    {
+        $sql = "SELECT p.id, nombre,mesa, total, fecha FROM pedidos p 
+        INNER JOIN clientes c ON p.cliente_id = c.id WHERE p.id = :id";
+
+        $resultado = $this->cn->prepare($sql);
+
+        $_array = array(
+            ':id' => $id
+        );
+
+        if ($resultado->execute($_array))
+            return  $resultado->fetch();
+
+        return false;
+    }
+    public function mostrarPorMesa($nombre_usuario)
+{
+    $sql = "SELECT p.id, nombre, mesa, total,fecha 
+            FROM pedidos p 
+            INNER JOIN clientes c ON p.cliente_id = c.id 
+            WHERE mesa = :nombre_usuario
+            ORDER BY p.id DESC";
+
+    $resultado = $this->cn->prepare($sql);
+
+    $_array = array(
+        ':nombre_usuario' => $nombre_usuario
+    );
+
+    if ($resultado->execute($_array))
+        return  $resultado->fetchAll();
+
+    return false;
+}
 
 }
