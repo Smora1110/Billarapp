@@ -65,8 +65,44 @@ require 'funciones.php';
 
 <body>
 
+  <!-- Fixed navbar -->
   <nav class="navbar navbar-default navbar-fixed-top">
-    <!-- ... Tu código de navegación ... -->
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="tienda.php"><svg xmlns="http://www.w3.org/2000/svg" href="tienda.php" class="icon icon-tabler icon-tabler-sport-billard" width="60" height="60" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M12 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+            <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+            <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
+          </svg>
+          </a> 
+
+          <a class="navbar-brand" href="tienda.php">BillarApp
+
+          </a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="tienda.php">Tienda</a></li>
+
+          <li><a href="billar.php">Billar</a></li>
+          <li><a href="pool.php">Pool</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav pull-right">
+          <li>
+            <a href="carrito.php" class="btn">CARRITO <span class="badge"><?php print cantidadproducto(); ?></span></a>
+          </li>
+          
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
   </nav>
 
   <div class="container mt-5">
