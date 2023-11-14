@@ -160,7 +160,9 @@ class Pedido
     }
 
 
-    public function iniciarTiempo($nombreUsuario) {
+
+    public function iniciarTiempo($nombreUsuario)
+    {
         try {
             // Obtener la fecha y hora actual
             $fechaHoraInicio = date("Y-m-d H:i:s");
@@ -174,9 +176,12 @@ class Pedido
             // Manejar el error de conexión
             echo "Error de conexión: " . $e->getMessage();
         }
+
+        return $fechaHoraInicio;
     }
 
-    public function detenerTiempo($nombreUsuario) {
+    public function detenerTiempo($nombreUsuario)
+    {
         try {
             // Obtener la fecha y hora actual
             $fechaHoraFin = date("Y-m-d H:i:s");
@@ -190,9 +195,11 @@ class Pedido
             // Manejar el error de conexión
             echo "Error de conexión: " . $e->getMessage();
         }
-    }
 
-    public function reiniciarTiempo($nombreUsuario) {
+        return $fechaHoraFin;
+    }
+    public function reiniciarTiempo($nombreUsuario)
+    {
         try {
             // Reiniciar ambos tiempos en la base de datos a NULL
             $consulta = $this->cn->prepare("UPDATE usuarios SET tiempo_inicio = NULL, tiempo_fin = NULL WHERE nombre_usuario = :nombreUsuario");
@@ -203,68 +210,84 @@ class Pedido
             echo "Error de conexión: " . $e->getMessage();
         }
     }
-    public function obtenerTiempoTranscurridoActual($nombreUsuario) {
+    public function obtenerTiempoTranscurridoActual($nombreUsuario)
+    {
         try {
-            // Obtener la fecha y hora de inicio desde la base de datos
-            $consulta = $this->cn->prepare("SELECT tiempo_inicio FROM usuarios WHERE nombre_usuario = :nombreUsuario");
+            // Obtener la fecha y hora de inicio y fin desde la base de datos
+            $consulta = $this->cn->prepare("SELECT UNIX_TIMESTAMP(tiempo_inicio) as tiempo_inicio, UNIX_TIMESTAMP(tiempo_fin) as tiempo_fin FROM usuarios WHERE nombre_usuario = :nombreUsuario");
             $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
             $consulta->execute();
-            $resultado = $consulta->fetch();
-    
+            $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
+
+
             // Calcular el tiempo transcurrido en segundos
-            if ($resultado && $resultado['tiempo_inicio'] !== null) {
-                $tiempoInicio = strtotime($resultado['tiempo_inicio']);
-                $tiempoActual = time();
-                $tiempoTranscurrido = $tiempoActual - $tiempoInicio;
-    
-                return $tiempoTranscurrido;
+            if ($resultado && $resultado['tiempo_inicio'] !== null && $resultado['tiempo_fin'] !== null) {
+                $tiempoInicio = $resultado['tiempo_inicio'];
+                $tiempoFin = $resultado['tiempo_fin'];
+
+                // Calcular la diferencia en segundos
+                $tiempoTranscurrido = $tiempoFin - $tiempoInicio;
+
+                // Convertir a minutos
+                $tiempoTranscurridoEnMinutos = round($tiempoTranscurrido / 60);
+
+                return $tiempoTranscurridoEnMinutos;
             }
         } catch (\PDOException $e) {
             // Manejar el error de conexión
             echo "Error de conexión: " . $e->getMessage();
         }
-    
-        return null;
+
+        return 0; // Retorna 0 si hay algún problema o no se encuentran datos
     }
-    
-    public function eliminarDatosMesa($nombre_usuario)
-{
-    try {
-        // Iniciar transacción para asegurar operaciones atómicas
-        $this->cn->beginTransaction();
 
-        // Obtener el ID del cliente asociado a la mesa
-        $consultaCliente = $this->cn->prepare("SELECT id FROM clientes WHERE mesa = :nombre_usuario");
-        $consultaCliente->bindParam(':nombre_usuario', $nombre_usuario, \PDO::PARAM_STR);
-        $consultaCliente->execute();
-        $resultadoCliente = $consultaCliente->fetch();
 
-        if ($resultadoCliente) {
-            $idCliente = $resultadoCliente['id'];
 
-            // Eliminar los pedidos asociados al cliente
-            $consultaPedidos = $this->cn->prepare("DELETE FROM pedidos WHERE cliente_id = :idCliente");
-            $consultaPedidos->bindParam(':idCliente', $idCliente, \PDO::PARAM_INT);
-            $consultaPedidos->execute();
 
-            // Eliminar el cliente
-            $consultaEliminarCliente = $this->cn->prepare("DELETE FROM clientes WHERE id = :idCliente");
-            $consultaEliminarCliente->bindParam(':idCliente', $idCliente, \PDO::PARAM_INT);
-            $consultaEliminarCliente->execute();
-        } else {
-            // Manejar el caso donde no se encuentra el cliente asociado a la mesa
-            echo "Cliente no encontrado para la mesa: " . $nombre_usuario;
+
+
+
+
+    // Agrega el siguiente método a tu clase Pedido
+    public function obtenerTiemposInicioFin($nombreUsuario)
+    {
+        try {
+            // Obtener la fecha y hora de inicio y fin desde la base de datos
+            $consulta = $this->cn->prepare("SELECT tiempo_inicio, tiempo_fin FROM usuarios WHERE nombre_usuario = :nombreUsuario");
+            $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+            $consulta->execute();
+            $resultado = $consulta->fetch();
+
+            // Retorna el resultado obtenido
+            return $resultado;
+        } catch (\PDOException $e) {
+            // Manejar el error de conexión
+            echo "Error de conexión: " . $e->getMessage();
         }
 
-        // Confirmar la transacción
-        $this->cn->commit();
-    } catch (\PDOException $e) {
-        // Revertir la transacción en caso de error
-        $this->cn->rollBack();
-
-        // Manejar el error de conexión
-        echo "Error de conexión: " . $e->getMessage();
+        return null;
     }
-}
 
+
+    public function eliminarDatosMesa($nombre_usuario)
+    {
+        try {
+            // Iniciar transacción para asegurar operaciones atómicas
+            $this->cn->beginTransaction();
+
+            // Eliminar toda la fila en la tabla clientes que tenga el nombre de usuario especificado
+            $consultaEliminarCliente = $this->cn->prepare("DELETE FROM clientes WHERE mesa = :nombre_usuario");
+            $consultaEliminarCliente->bindParam(':nombre_usuario', $nombre_usuario, \PDO::PARAM_STR);
+            $consultaEliminarCliente->execute();
+
+            // Confirmar la transacción
+            $this->cn->commit();
+        } catch (\PDOException $e) {
+            // Revertir la transacción en caso de error
+            $this->cn->rollBack();
+
+            // Manejar el error de conexión
+            echo "Error de conexión: " . $e->getMessage();
+        }
+    }
 }

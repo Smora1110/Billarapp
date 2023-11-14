@@ -14,35 +14,32 @@ if ($estado == 0) {
     exit; // Asegúrate de salir después de redirigir
 }
 
-// Crea una instancia de la clase Pedido
-$pedido = new billar\Pedido;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // ...
 
-if (isset($_POST['eliminar'])) {
-    // Verificar si se ha enviado el formulario de eliminación
-    $nombre_usuario = isset($_POST['nombre_usuario']) ? $_POST['nombre_usuario'] : null;
+    if ($nombre_usuario && $accion) {
+        $pedido = new billar\Pedido;
 
-    if ($nombre_usuario) {
-        // Llama al método eliminarDatosMesa de la instancia de Pedido
-        $pedido->eliminarDatosMesa($nombre_usuario);
-        // Puedes redirigir a la página nuevamente o realizar cualquier otra acción después de la eliminación.
-        header('Location: mesas.php');
-        exit;
-    } else {
-        echo "Error: No se proporcionó el nombre de usuario para eliminar datos.";
-    }
-}
+        switch ($accion) {
+            case 'iniciar':
+                $tiempoInicio = $pedido->iniciarTiempo($nombre_usuario);
+                break;
+            case 'detener':
+                $tiempoFin = $pedido->detenerTiempo($nombre_usuario);
 
-if (isset($_POST['eliminar'])) {
-    // Verificar si se ha enviado el formulario de eliminación
-    $nombre_usuario = isset($_POST['nombre_usuario']) ? $_POST['nombre_usuario'] : null;
+                // Obtener el tiempo transcurrido
+                $tiempoTranscurrido = $pedido->obtenerTiempoTranscurridoActual($nombre_usuario);
 
-    if ($nombre_usuario) {
-        $pedido->eliminarDatosMesa($nombre_usuario);
-        // Puedes redirigir a la página nuevamente o realizar cualquier otra acción después de la eliminación.
-        header('Location: mesa.php?id=' . $nombre_usuario);
-        exit;
-    } else {
-        echo "Error: No se proporcionó el nombre de usuario para eliminar datos.";
+                // Calcular el costo total
+                $costo_total = $tiempoTranscurrido * 200;
+                break;
+            case 'reinicio':
+                $pedido->reiniciarTiempo($nombre_usuario);
+                break;
+            default:
+                // Manejar acciones desconocidas si es necesario
+                break;
+        }
     }
 }
 ?>
@@ -146,6 +143,17 @@ if (isset($_POST['eliminar'])) {
                             print '<td colspan="2">Total de la Mesa:</td>';
                             print '<td>' . $totalMesa . '</td>';
                             print '</tr>';
+                            if (isset($costo_total)) {
+                                print '<tr>';
+                                print '<td colspan="2">Costo Total:</td>';
+                                print '<td>' . $costo_total . '</td>';
+                                print '</tr>';
+                            }
+                            $costo_total = "";
+                            // Aquí deberías colocar el nombre del campo o variable que contiene el valor de tiempo
+                            print '<span id="valorTiempo">' . $costo_total . '</span>';
+                            print '</td>';
+                            print '</tr>';
                         } else {
                             print '<tr>';
                             print '<td colspan="3">NO HAY REGISTROS</td>';
@@ -158,10 +166,48 @@ if (isset($_POST['eliminar'])) {
                             <button type="submit" name="accion" value="iniciar" class="btn btn-danger btn-sm btn-iniciar"><span>inicio</span></button>
                             <button type="submit" name="accion" value="detener" class="btn btn-danger btn-sm btn-detener"><span>detener</span></button>
                             <button type="submit" name="accion" value="reinicio" class="btn btn-danger btn-sm btn-reinicio"><span>reinicio</span></button>
-                            <button type="submit" name="eliminar" class="btn btn-danger btn-sm"><span>Eliminar Datos</span></button>
+                            <button type="submit" name="accion" value="eliminar" class="btn btn-danger btn-sm"><span>Eliminar Datos</span></button>
                         </form>
 
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">Precio del Tiempo:</td>
+                            <td>
+                                200/minuto
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tiempo transcurrido</td>
+                            <td></td>
+                            <td id="tiempoTranscurrido">
+                                <?php
+                                $tiempoTranscurrido = $pedido->obtenerTiempoTranscurridoActual($nombre_usuario);
+                                if ($tiempoTranscurrido !== null) {
+                                    echo $tiempoTranscurrido . ' minutos';
+                                } else {
+                                    echo 'N/A';
+                                }
+                                ?>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">Total Global:</td>
+                            <td>
+                                <label>
+                                    <?php
+                                    // Calcular el total global
+                                    $precioTiempo = isset($_POST['precioTiempo']) ? $_POST['precioTiempo'] : 200; // Valor predeterminado de 200
+                                    $totalGlobal = $totalMesa + ($tiempoTranscurrido * $precioTiempo);
+                                    echo $totalGlobal;
+                                    ?>
+                                </label>
+                            </td>
+                        </tr>
+
+
+                    </tfoot>
                 </table>
             </div>
         </div>
