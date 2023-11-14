@@ -54,7 +54,7 @@ if ($estado == 0) {
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav pull-right">
           <li>
-            <a href="productos/index.php" class="btn">Pedidos</a>
+            <a href="pedidos/index.php" class="btn">Pedidos</a>
           </li>
           <li>
             <a href="productos/index.php" class="btn">Productos</a>

@@ -52,7 +52,7 @@ if ($estado == 0) {
                         <a href="index.php" class="btn">Productos</a>
                     </li>
                     <li class="active">
-                        <a href="productos/mesas.php" class="btn">Mesas</a>
+                        <a href="" class="btn">Mesas</a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">admin <span class="caret"></span></a>

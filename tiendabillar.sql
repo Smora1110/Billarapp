@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-11-2023 a las 17:34:00
+-- Tiempo de generación: 14-11-2023 a las 09:42:00
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -181,6 +181,40 @@ INSERT INTO `productos` (`id`, `titulo`, `descripcion`, `foto`, `precio`, `categ
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `puntos`
+--
+
+CREATE TABLE `puntos` (
+  `id` int(11) NOT NULL,
+  `equipo` varchar(20) NOT NULL,
+  `puntos` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `puntos`
+--
+
+INSERT INTO `puntos` (`id`, `equipo`, `puntos`) VALUES
+(1, 'Equipo1', 0),
+(2, 'Equipo2', 0),
+(3, 'Equipo3', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `puntos_jugadores`
+--
+
+CREATE TABLE `puntos_jugadores` (
+  `id` int(11) NOT NULL,
+  `jugador` varchar(50) NOT NULL,
+  `buenas` int(11) NOT NULL,
+  `malas` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -188,20 +222,22 @@ CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `nombre_usuario` varchar(100) NOT NULL,
   `clave` varchar(150) NOT NULL,
-  `estado` int(11) NOT NULL DEFAULT 1
+  `estado` int(11) NOT NULL DEFAULT 1,
+  `tiempo_inicio` timestamp NULL DEFAULT NULL,
+  `tiempo_fin` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre_usuario`, `clave`, `estado`) VALUES
-(1, 'admin', 'admin123', 1),
-(2, 'mesa1', 'mesa1', 0),
-(3, 'mesa2', 'mesa2', 0),
-(4, 'mesa3', 'mesa3', 0),
-(5, 'mesa4', 'mesa4', 0),
-(6, 'mesa5', 'mesa5', 0);
+INSERT INTO `usuarios` (`id`, `nombre_usuario`, `clave`, `estado`, `tiempo_inicio`, `tiempo_fin`) VALUES
+(1, 'admin', 'admin123', 1, NULL, NULL),
+(2, 'mesa1', 'mesa1', 0, '2023-11-14 14:07:10', '2023-11-14 14:07:34'),
+(3, 'mesa2', 'mesa2', 0, NULL, NULL),
+(4, 'mesa3', 'mesa3', 0, NULL, NULL),
+(5, 'mesa4', 'mesa4', 0, NULL, NULL),
+(6, 'mesa5', 'mesa5', 0, NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -238,9 +274,15 @@ ALTER TABLE `productos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `usuarios`
+-- Indices de la tabla `puntos`
 --
-ALTER TABLE `usuarios`
+ALTER TABLE `puntos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `puntos_jugadores`
+--
+ALTER TABLE `puntos_jugadores`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -278,10 +320,16 @@ ALTER TABLE `productos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT de la tabla `puntos`
 --
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `puntos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `puntos_jugadores`
+--
+ALTER TABLE `puntos_jugadores`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

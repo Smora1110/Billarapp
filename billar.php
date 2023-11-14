@@ -8,6 +8,15 @@ if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info'])) {
 session_start();
 require 'funciones.php';
 
+// Manejar la solicitud POST para reiniciar puntos
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST["resetEquipoBtn"])) {
+    // Asegúrate de obtener el nombre del equipo correctamente desde tu formulario
+    $equipo = $_POST["nombre_del_equipo"]; // Reemplaza esto con el valor correcto
+    reiniciarPuntosEnBaseDeDatos($equipo);
+  }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -117,25 +126,26 @@ require 'funciones.php';
 
     <div class="equipos-row equipo-container">
       <!-- Equipo 1 -->
-      <div class="col-md-4 equipo-column">
-        <h2>Equipo 1</h2>
-        <p>Puntos: <span id="puntosEquipo1">0</span></p>
-        <button type="button" class="btn btn-danger btn-reiniciar" id="resetEquipo1Btn">Reiniciar Puntos</button>
-      </div>
+<div class="col-md-4 equipo-column">
+  <h2>Equipo 1</h2>
+  <p>Puntos: <span id="puntosEquipo1">0</span></p>
+  <button type="button" class="btn btn-danger btn-reiniciar" data-equipo="Equipo1" id="resetEquipo1Btn">Reiniciar Puntos</button>
+</div>
 
-      <!-- Equipo 2 -->
-      <div class="col-md-4 equipo-column">
-        <h2>Equipo 2</h2>
-        <p>Puntos: <span id="puntosEquipo2">0</span></p>
-        <button type="button" class="btn btn-danger btn-reiniciar" id="resetEquipo2Btn">Reiniciar Puntos</button>
-      </div>
+<!-- Equipo 2 -->
+<div class="col-md-4 equipo-column">
+  <h2>Equipo 2</h2>
+  <p>Puntos: <span id="puntosEquipo2">0</span></p>
+  <button type="button" class="btn btn-danger btn-reiniciar" data-equipo="Equipo2" id="resetEquipo2Btn">Reiniciar Puntos</button>
+</div>
 
-      <!-- Equipo 3 -->
-      <div class="col-md-4 equipo-column">
-        <h2>Equipo 3</h2>
-        <p>Puntos: <span id="puntosEquipo3">0</span></p>
-        <button type="button" class="btn btn-danger btn-reiniciar" id="resetEquipo3Btn">Reiniciar Puntos</button>
-      </div>
+<!-- Equipo 3 -->
+<div class="col-md-4 equipo-column">
+  <h2>Equipo 3</h2>
+  <p>Puntos: <span id="puntosEquipo3">0</span></p>
+  <button type="button" class="btn btn-danger btn-reiniciar" data-equipo="Equipo3" id="resetEquipo3Btn">Reiniciar Puntos</button>
+</div>
+
     </div>
 
     <div class="row">
@@ -171,53 +181,72 @@ require 'funciones.php';
       </div>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // Script para manejar la actualización y el reseteo de puntos
-    document.getElementById("actualizarBtn").addEventListener("click", function() {
-      var Equipo = document.getElementById("Equipo").value;
-      var accion = document.getElementById("accion").value;
-      var cantidad = parseInt(document.getElementById("cantidad").value);
-
-      if (accion === "sumar") {
-        if (Equipo === "Equipo1") {
-          var puntosEquipo1 = parseInt(document.getElementById("puntosEquipo1").textContent);
-          document.getElementById("puntosEquipo1").textContent = puntosEquipo1 + cantidad;
-        } else if (Equipo === "Equipo2") {
-          var puntosEquipo2 = parseInt(document.getElementById("puntosEquipo2").textContent);
-          document.getElementById("puntosEquipo2").textContent = puntosEquipo2 + cantidad;
-        } else if (Equipo === "Equipo3") {
-          var puntosEquipo3 = parseInt(document.getElementById("puntosEquipo3").textContent);
-          document.getElementById("puntosEquipo3").textContent = puntosEquipo3 + cantidad;
-        }
-      } else if (accion === "restar") {
-        if (Equipo === "Equipo1") {
-          var puntosEquipo1 = parseInt(document.getElementById("puntosEquipo1").textContent);
-          document.getElementById("puntosEquipo1").textContent = puntosEquipo1 - cantidad;
-        } else if (Equipo === "Equipo2") {
-          var puntosEquipo2 = parseInt(document.getElementById("puntosEquipo2").textContent);
-          document.getElementById("puntosEquipo2").textContent = puntosEquipo2 - cantidad;
-        } else if (Equipo === "Equipo3") {
-          var puntosEquipo3 = parseInt(document.getElementById("puntosEquipo3").textContent);
-          document.getElementById("puntosEquipo3").textContent = puntosEquipo3 - cantidad;
+  // Función para realizar solicitudes AJAX
+  function hacerSolicitudAJAX(url, datos, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4) {
+        if (xhr.status == 200) {
+          callback(xhr.responseText);
+        } else {
+          console.error("Error en la solicitud AJAX. Estado:", xhr.status);
         }
       }
-    });
+    };
+    xhr.send(datos);
+  }
 
-    // Script para resetear los puntos de las Equipos
-    document.getElementById("resetEquipo1Btn").addEventListener("click", function() {
-      document.getElementById("puntosEquipo1").textContent = "0";
-    });
+  // Función para actualizar puntos
+  function actualizarPuntos(equipo, accion, cantidad) {
+    var datos = "equipo=" + encodeURIComponent(equipo) + "&accion=" + encodeURIComponent(accion) + "&cantidad=" + encodeURIComponent(cantidad);
 
-    document.getElementById("resetEquipo2Btn").addEventListener("click", function() {
-      document.getElementById("puntosEquipo2").textContent = "0";
+    hacerSolicitudAJAX("actualizar_puntos.php", datos, function(respuesta) {
+      console.log("Respuesta del servidor:", respuesta);
+      // Actualizar los puntos en la interfaz de usuario (ajusta según tu estructura HTML)
+      document.getElementById("puntos" + equipo).textContent = respuesta;
     });
+  }
 
-    document.getElementById("resetEquipo3Btn").addEventListener("click", function() {
-      document.getElementById("puntosEquipo3").textContent = "0";
+  // Función para reiniciar puntos
+  function reiniciarPuntos(equipo) {
+    var datos = "equipo=" + encodeURIComponent(equipo) + "&accion=reiniciar&cantidad=0";
+
+    hacerSolicitudAJAX("reiniciar_puntos.php", datos, function(respuesta) {
+      console.log("Respuesta del servidor:", respuesta);
+      // Reiniciar los puntos en la interfaz de usuario (ajusta según tu estructura HTML)
+      document.getElementById("puntos" + equipo).textContent = respuesta;
     });
+  }
+
+  // Evento de clic para el botón de actualizar
+  document.getElementById("actualizarBtn").addEventListener("click", function() {
+    var equipo = document.getElementById("Equipo").value;
+    var accion = document.getElementById("accion").value;
+    var cantidad = parseInt(document.getElementById("cantidad").value);
+
+    // Llama a la función para actualizar puntos
+    actualizarPuntos(equipo, accion, cantidad);
+  });
+
+  // Evento de clic para los botones de reinicio
+  document.querySelectorAll(".btn-reiniciar").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var equipo = this.getAttribute("data-equipo");
+
+      // Llama a la función para reiniciar puntos
+      reiniciarPuntos(equipo);
+    });
+  });
+</script>
   </script>
+
+
 </body>
 </html>
