@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-11-2023 a las 09:42:00
+-- Tiempo de generación: 14-11-2023 a las 21:55:13
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -202,10 +202,10 @@ INSERT INTO `puntos` (`id`, `equipo`, `puntos`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `puntos_jugadores`
+-- Estructura de tabla para la tabla `puntos_pool`
 --
 
-CREATE TABLE `puntos_jugadores` (
+CREATE TABLE `puntos_pool` (
   `id` int(11) NOT NULL,
   `jugador` varchar(50) NOT NULL,
   `buenas` int(11) NOT NULL,
@@ -233,7 +233,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `nombre_usuario`, `clave`, `estado`, `tiempo_inicio`, `tiempo_fin`) VALUES
 (1, 'admin', 'admin123', 1, NULL, NULL),
-(2, 'mesa1', 'mesa1', 0, '2023-11-14 14:07:10', '2023-11-14 14:07:34'),
+(2, 'mesa1', 'mesa1', 0, NULL, NULL),
 (3, 'mesa2', 'mesa2', 0, NULL, NULL),
 (4, 'mesa3', 'mesa3', 0, NULL, NULL),
 (5, 'mesa4', 'mesa4', 0, NULL, NULL),
@@ -280,9 +280,9 @@ ALTER TABLE `puntos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `puntos_jugadores`
+-- Indices de la tabla `puntos_pool`
 --
-ALTER TABLE `puntos_jugadores`
+ALTER TABLE `puntos_pool`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -326,9 +326,9 @@ ALTER TABLE `puntos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `puntos_jugadores`
+-- AUTO_INCREMENT de la tabla `puntos_pool`
 --
-ALTER TABLE `puntos_jugadores`
+ALTER TABLE `puntos_pool`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

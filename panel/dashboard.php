@@ -146,7 +146,12 @@ if ($estado == 0) {
 
   </div> <!-- /container -->
 
-
+  <script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+    history.go(1);
+    };
+  </script>
   <!-- Bootstrap core JavaScript
     ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
