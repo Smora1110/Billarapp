@@ -2,6 +2,7 @@
 session_start();
 if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info']))
   header('Location: ../index.php');
+#if (!isset($_SESSION['usuario_info']) || empty($_SESSION['usuario_info']) || $_SESSION['usuario_info']['nombre_usuario'] !== 'admin')
 ?>
 
 <!DOCTYPE html>

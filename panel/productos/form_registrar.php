@@ -3,7 +3,6 @@ session_start();
 if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info']))
   header('Location: ../../index.php');
 ?>
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>

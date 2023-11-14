@@ -1,9 +1,16 @@
 <?php
 session_start();
+if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info'])) {
+  // Redirigir a la página de inicio de sesión
+  header("Location: index.php");
+  exit(); // Asegurar que el script se detenga después de la redirección
+}
+session_start();
 require 'funciones.php';
 
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
