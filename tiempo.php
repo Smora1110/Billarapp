@@ -66,9 +66,9 @@ require 'funciones.php';
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li><a href="tienda.php">Tienda</a></li>
-
           <li><a href="billar.php">Billar</a></li>
           <li><a href="pool.php">Pool</a></li>
+          <li><a href="">Tiempo</a></li>
         </ul>
 
         <ul class="nav navbar-nav pull-right">

@@ -111,6 +111,7 @@ $cantidad = count($info_productos);
 
                     <li><a href="billar.php">Billar</a></li>
                     <li><a href="pool.php">Pool</a></li>
+                    <li><a href="tiempo.php">Tiempo</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav pull-right">

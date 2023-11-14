@@ -106,9 +106,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li><a href="tienda.php">Tienda</a></li>
-
           <li><a href="billar.php">Billar</a></li>
           <li><a href="pool.php">Pool</a></li>
+          <li><a href="tiempo.php">Tiempo</a></li>
         </ul>
 
         <ul class="nav navbar-nav pull-right">

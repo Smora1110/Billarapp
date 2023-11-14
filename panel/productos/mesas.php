@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/css/estilos.css">
+    
 </head>
 
 <body>
@@ -48,6 +49,7 @@
             </div>
         </div>
     </nav>
+
     <div class="container" id="main">
         <div class="row">
             <div class="col-md-12">
@@ -59,9 +61,7 @@
                                 <th>#</th>
                                 <th>Nombre de Usuario</th>
                                 <th class="text-center">Ver</th>
-                                
                             </tr>
-
                         </thead>
 
                         <tbody>
@@ -70,7 +70,6 @@
                             $pedido = new billar\Pedido;
                             $info_pedido = $pedido->mostrarMesas();
 
-
                             $cantidad = count($info_pedido);
                             if ($cantidad > 0) {
                                 $c = 0;
@@ -78,33 +77,22 @@
                                     $c++;
                                     $item = $info_pedido[$x];
                             ?>
-
-
                                     <tr>
-                                        <td><?php print $c ?></td>
-                                        <td><?php print $item['nombre_usuario'] ?></td>
-
+                                        <td><?php echo $c; ?></td>
+                                        <td><?php echo $item['nombre_usuario']; ?></td>
                                         <td class="text-center">
                                             <a href="../pedidos/ver_mesa.php?id=<?php echo urlencode($item['nombre_usuario']); ?>" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-eye-open"></span></a>
-
-                                        
+                                        </td>
                                     </tr>
-
-
                                 <?php
                                 }
                             } else {
-
                                 ?>
                                 <tr>
-                                    <td colspan="6">NO HAY REGISTROS</td>
+                                    <td colspan="3">NO HAY REGISTROS</td>
                                 </tr>
-
                             <?php } ?>
-
-
                         </tbody>
-
                     </table>
                 </fieldset>
             </div>
@@ -113,7 +101,6 @@
 
     <script src="../../assets/js/jquery.min.js"></script>
     <script src="../../assets/js/bootstrap.min.js"></script>
-
 
 </body>
 

@@ -227,4 +227,44 @@ class Pedido
         return null;
     }
     
+    public function eliminarDatosMesa($nombre_usuario)
+{
+    try {
+        // Iniciar transacción para asegurar operaciones atómicas
+        $this->cn->beginTransaction();
+
+        // Obtener el ID del cliente asociado a la mesa
+        $consultaCliente = $this->cn->prepare("SELECT id FROM clientes WHERE mesa = :nombre_usuario");
+        $consultaCliente->bindParam(':nombre_usuario', $nombre_usuario, \PDO::PARAM_STR);
+        $consultaCliente->execute();
+        $resultadoCliente = $consultaCliente->fetch();
+
+        if ($resultadoCliente) {
+            $idCliente = $resultadoCliente['id'];
+
+            // Eliminar los pedidos asociados al cliente
+            $consultaPedidos = $this->cn->prepare("DELETE FROM pedidos WHERE cliente_id = :idCliente");
+            $consultaPedidos->bindParam(':idCliente', $idCliente, \PDO::PARAM_INT);
+            $consultaPedidos->execute();
+
+            // Eliminar el cliente
+            $consultaEliminarCliente = $this->cn->prepare("DELETE FROM clientes WHERE id = :idCliente");
+            $consultaEliminarCliente->bindParam(':idCliente', $idCliente, \PDO::PARAM_INT);
+            $consultaEliminarCliente->execute();
+        } else {
+            // Manejar el caso donde no se encuentra el cliente asociado a la mesa
+            echo "Cliente no encontrado para la mesa: " . $nombre_usuario;
+        }
+
+        // Confirmar la transacción
+        $this->cn->commit();
+    } catch (\PDOException $e) {
+        // Revertir la transacción en caso de error
+        $this->cn->rollBack();
+
+        // Manejar el error de conexión
+        echo "Error de conexión: " . $e->getMessage();
+    }
+}
+
 }

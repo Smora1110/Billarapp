@@ -1,4 +1,6 @@
 <?php
+require '../../vendor/autoload.php';
+
 session_start();
 if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info'])) {
     header('Location: ../../index.php');
@@ -7,10 +9,41 @@ if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info'])) {
 
 $estado = $_SESSION['estado'];
 
-print_r($estado);
 if ($estado == 0) {
     header('Location: ../tienda.php');
     exit; // Asegúrate de salir después de redirigir
+}
+
+// Crea una instancia de la clase Pedido
+$pedido = new billar\Pedido;
+
+if (isset($_POST['eliminar'])) {
+    // Verificar si se ha enviado el formulario de eliminación
+    $nombre_usuario = isset($_POST['nombre_usuario']) ? $_POST['nombre_usuario'] : null;
+
+    if ($nombre_usuario) {
+        // Llama al método eliminarDatosMesa de la instancia de Pedido
+        $pedido->eliminarDatosMesa($nombre_usuario);
+        // Puedes redirigir a la página nuevamente o realizar cualquier otra acción después de la eliminación.
+        header('Location: mesas.php');
+        exit;
+    } else {
+        echo "Error: No se proporcionó el nombre de usuario para eliminar datos.";
+    }
+}
+
+if (isset($_POST['eliminar'])) {
+    // Verificar si se ha enviado el formulario de eliminación
+    $nombre_usuario = isset($_POST['nombre_usuario']) ? $_POST['nombre_usuario'] : null;
+
+    if ($nombre_usuario) {
+        $pedido->eliminarDatosMesa($nombre_usuario);
+        // Puedes redirigir a la página nuevamente o realizar cualquier otra acción después de la eliminación.
+        header('Location: mesa.php?id=' . $nombre_usuario);
+        exit;
+    } else {
+        echo "Error: No se proporcionó el nombre de usuario para eliminar datos.";
+    }
 }
 ?>
 
@@ -26,11 +59,19 @@ if ($estado == 0) {
     <title>BillarApp</title>
     <link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../assets/css/estilos.css">
+
+    <style>
+        .btn-iniciar,
+        .btn-detener,
+        .btn-reinicio {
+            margin-right: 15px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
-
 <body>
-
 
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -52,7 +93,7 @@ if ($estado == 0) {
                         <a href="index.php" class="btn">Productos</a>
                     </li>
                     <li class="active">
-                        <a href="" class="btn">Mesas</a>
+                        <a href="../productos/mesas.php" class="btn">Mesas</a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">admin <span class="caret"></span></a>
@@ -64,6 +105,7 @@ if ($estado == 0) {
             </div>
         </div>
     </nav>
+
     <div class="container" id="main">
         <div class="row">
             <div class="col-md-12">
@@ -72,59 +114,52 @@ if ($estado == 0) {
                         <tr>
                             <th>#</th>
                             <th>Nombre</th>
-
                             <th>Total</th>
-
                         </tr>
                     </thead>
                     <tbody>
 
                         <?php
-                        require '../../vendor/autoload.php';
                         $nombre_usuario = isset($_GET['id']) ? $_GET['id'] : null;
-
-
-
-
                         $pedido = new billar\Pedido;
                         $info_pedido = $pedido->mostrarPorMesa($nombre_usuario);
 
-
                         $cantidad = count($info_pedido);
+                        $totalMesa = 0;
+
                         if ($cantidad > 0) {
                             $c = 0;
                             for ($x = 0; $x < $cantidad; $x++) {
                                 $c++;
                                 $item = $info_pedido[$x];
-
+                                $totalMesa += $item['total'];
 
                                 print '<tr>';
                                 print '<td>' . $c . '</td>';
                                 print '<td>' . $item['nombre'] . '</td>';
-
                                 print '<td>' . $item['total'] . '</td>';
-
                                 print '</tr>';
                             }
+
+                            // Mostrar el total de la mesa
+                            print '<tr>';
+                            print '<td colspan="2">Total de la Mesa:</td>';
+                            print '<td>' . $totalMesa . '</td>';
+                            print '</tr>';
                         } else {
                             print '<tr>';
-                            print '<td colspan="6">NO HAY REGISTROS</td>';
+                            print '<td colspan="3">NO HAY REGISTROS</td>';
                             print '</tr>';
                         }
                         ?>
-
-
-
-
 
                         <form action="../../src/actualizar_tiempo.php" method="post">
                             <input type="hidden" name="nombre_usuario" value="<?php echo $nombre_usuario; ?>">
                             <button type="submit" name="accion" value="iniciar" class="btn btn-danger btn-sm btn-iniciar"><span>inicio</span></button>
                             <button type="submit" name="accion" value="detener" class="btn btn-danger btn-sm btn-detener"><span>detener</span></button>
                             <button type="submit" name="accion" value="reinicio" class="btn btn-danger btn-sm btn-reinicio"><span>reinicio</span></button>
+                            <button type="submit" name="eliminar" class="btn btn-danger btn-sm"><span>Eliminar Datos</span></button>
                         </form>
-
-
 
                     </tbody>
                 </table>
