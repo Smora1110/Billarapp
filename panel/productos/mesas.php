@@ -58,6 +58,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nombre de Usuario</th>
+                                <th class="text-center">Ver</th>
+                                
                             </tr>
 
                         </thead>
@@ -81,11 +83,11 @@
                                     <tr>
                                         <td><?php print $c ?></td>
                                         <td><?php print $item['nombre_usuario'] ?></td>
-                                        
-                                        <td class="text-center">
-                                        <a href="../pedidos/ver_mesa.php?id=<?php echo urlencode($item['nombre_usuario']); ?>" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-eye-open"></span></a>
 
-                                        </td>
+                                        <td class="text-center">
+                                            <a href="../pedidos/ver_mesa.php?id=<?php echo urlencode($item['nombre_usuario']); ?>" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-eye-open"></span></a>
+
+                                        
                                     </tr>
 
 
