@@ -3,6 +3,17 @@ session_start();
 if (!isset($_SESSION['usuario_info']) or empty($_SESSION['usuario_info']))
   header('Location: ../../index.php');
 
+
+
+$estado = $_SESSION['estado'];
+
+
+print_r($estado);
+if ($estado == 0) {
+  
+    header('Location: ../tienda.php');
+}
+
 require '../../vendor/autoload.php';
 
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
