@@ -141,6 +141,7 @@ require 'funciones.php';
     <div class="row">
       <!-- Seleccionar equipo y acción -->
       <div class="col-md-4 seleccionar-equipo">
+        <label for="Equipo" class="form-label">Seleccionar equipo:</label>
         <select class="form-select mb-2" id="Equipo" required>
           <option value="Equipo1">Equipo 1</option>
           <option value="Equipo2">Equipo 2</option>
@@ -149,6 +150,7 @@ require 'funciones.php';
       </div>
 
       <div class="col-md-4 seleccionar-accion">
+        <label for="accion" class="form-label">Acción:</label>
         <select class="form-select mb-2" id="accion" required>
           <option value="sumar">Sumar Puntos</option>
           <option value="restar">Restar Puntos</option>
