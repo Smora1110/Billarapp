@@ -20,6 +20,13 @@ require 'funciones.php';
   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/estilos.css">
 
+  <style>
+  #actualizarBtn,
+  #agregarJugadorBtn {
+    margin-top: 10px;
+  }
+</style>
+
 </head>
 
 <body>
@@ -64,47 +71,180 @@ require 'funciones.php';
     </div>
   </nav>
 
-  <!-- Contador de Puntos -->
-  <div class="container mt-5">
-    <h1 class="mb-4">Contador de Puntos</h1>
+<!-- Contador de Puntos -->
+<div class="container mt-5">
+  <h1 class="mb-4">Contador de Puntos</h1>
 
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <h2>Jugador 1</h2>
-        <p>Buenas: <span id="buenasJugador1">0</span></p>
-        <p>Malas: <span id="malasJugador1">0</span></p>
-        <p>Total Puntos: <span id="totalJugador1">0</span></p>
-      </div>
-      <div class="col-md-4">
-        <h2>Jugador 2</h2>
-        <p>Buenas: <span id="buenasJugador2">0</span></p>
-        <p>Malas: <span id="malasJugador2">0</span></p>
-        <p>Total Puntos: <span id="totalJugador2">0</span></p>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <!-- Jugador 1 -->
+      <table class="table table-bordered" id="jugador1">
+        <thead>
+          <tr>
+            <th scope="col">Jugador 1</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Buenas: <span id="buenasJugador1">0</span></td>
+            <td>Malas: <span id="malasJugador1">0</span></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text-center">Total Puntos: <span id="totalJugador1">0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6">
+      <!-- Jugador 2 -->
+      <table class="table table-bordered" id="jugador2">
+        <thead>
+          <tr>
+            <th scope="col">Jugador 2</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Buenas: <span id="buenasJugador2">0</span></td>
+            <td>Malas: <span id="malasJugador2">0</span></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text-center">Total Puntos: <span id="totalJugador2">0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="d-flex justify-content-between mb-3">
+        <div class="w-45">
+          <label for="Jugador" class="form-label">Seleccionar Jugador:</label>
+          <select class="form-select" id="Jugador" required>
+            <option value="Jugador1">Jugador 1</option>
+            <option value="Jugador2">Jugador 2</option>
+          </select>
+        </div>
+        <div class="w-45">
+          <label for="accion" class="form-label">Acción:</label>
+          <select class="form-select" id="accion" required>
+            <option value="sumar">Sumar Puntos</option>
+            <option value="restar">Restar Puntos</option>
+          </select>
+        </div>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-md-4">
-        <br><br><br>
-        <select class="form-select mb-2" id="Jugador" required>
-          <option value="Jugador1">Jugador 1</option>
-          <option value="Jugador2">Jugador 2</option>
-        </select>
-
-        <select class="form-select mb-2" id="accion" required>
-          <option value="sumar">Sumar Puntos</option>
-          <option value="restar">Restar Puntos</option>
-        </select>
-        <div class="mb-3">
-          <br>
-          <label for="cantidad" class="form-label">Cantidad:</label>
-          <input type="number" class="form-control" id="cantidad" required>
-        </div>
-        <br>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="cantidad" class="form-label">Cantidad:</label>
+        <input type="number" class="form-control" id="cantidad" required>
+      </div>
+      <div class="mb-3 text-center">
         <button type="button" class="btn btn-primary" id="actualizarBtn">Actualizar Puntos</button>
       </div>
     </div>
   </div>
+
+  <!-- Botón para agregar jugador -->
+  <div class="text-center">
+    <button type="button" class="btn btn-success" id="agregarJugadorBtn">Agregar Jugador</button>
+  </div>
+</div>
+
+<script>
+  var jugadores = ["Jugador1", "Jugador2"]; // Almacena los identificadores iniciales de los jugadores
+
+// Función para agregar un nuevo jugador
+function agregarJugador() {
+  var jugadorCount = jugadores.length + 1;
+  var nuevoJugadorTable = document.createElement("table");
+  nuevoJugadorTable.classList.add("table", "table-bordered");
+  var jugadorId = "Jugador" + jugadorCount;
+  nuevoJugadorTable.id = jugadorId;
+
+  nuevoJugadorTable.innerHTML = `
+    <thead>
+      <tr>
+        <th scope="col">Jugador ${jugadorCount}</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Buenas: <span id="buenas${jugadorId}">0</span></td>
+        <td>Malas: <span id="malas${jugadorId}">0</span></td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-center">Total Puntos: <span id="total${jugadorId}">0</span></td>
+      </tr>
+    </tbody>
+  `;
+
+  // Insertar la nueva tabla después de la última tabla de jugador
+  document.querySelector(".row.mb-3").appendChild(document.createElement("div")).classList.add("col-md-6");
+  document.querySelector(".row.mb-3").lastChild.appendChild(nuevoJugadorTable);
+
+  // Agregar el nuevo jugador al arreglo
+  jugadores.push(jugadorId);
+
+  // Actualizar las opciones de selección de jugador
+  actualizarOpcionesJugador();
+
+  // Actualizar el total de puntos para el nuevo jugador
+  actualizarPantalla();
+}
+
+// Función para actualizar las opciones de selección de jugador
+function actualizarOpcionesJugador() {
+  var opcionesJugador = document.getElementById("Jugador");
+
+  // Limpiar las opciones actuales
+  opcionesJugador.innerHTML = "";
+
+  // Agregar las opciones de cada jugador
+  for (var i = 0; i < jugadores.length; i++) {
+    var opcion = document.createElement("option");
+    opcion.value = jugadores[i];
+    opcion.textContent = "Jugador " + (i + 1);
+    opcionesJugador.appendChild(opcion);
+  }
+}
+
+// Función para actualizar la pantalla con las buenas, malas y total de puntos actuales
+function actualizarPantalla() {
+  for (var i = 0; i < jugadores.length; i++) {
+    var jugadorId = jugadores[i];
+    var buenas = parseInt(document.getElementById("buenas" + jugadorId).textContent) || 0;
+    var malas = parseInt(document.getElementById("malas" + jugadorId).textContent) || 0;
+    var total = buenas - malas;
+
+    // Aquí, asegúrate de utilizar IDs únicos para las casillas de total de puntos
+    document.getElementById("total" + jugadorId).textContent = total;
+  }
+}
+
+  // Evento para agregar un nuevo jugador al hacer clic en el botón
+  document.getElementById("agregarJugadorBtn").addEventListener("click", agregarJugador);
+
+  // Evento para actualizar los puntos al hacer clic en el botón
+  document.getElementById("actualizarBtn").addEventListener("click", function() {
+    var Jugador = document.getElementById("Jugador").value;
+    var accion = document.getElementById("accion").value;
+    var cantidad = parseInt(document.getElementById("cantidad").value) || 0;
+
+    if (accion === "sumar") {
+      document.getElementById("buenas" + Jugador).textContent = (parseInt(document.getElementById("buenas" + Jugador).textContent) || 0) + cantidad;
+    } else if (accion === "restar") {
+      document.getElementById("malas" + Jugador).textContent = (parseInt(document.getElementById("malas" + Jugador).textContent) || 0) + cantidad;
+    }
+
+    // Actualizar el total de puntos después de modificar las buenas o malas
+    actualizarPantalla();
+  });
+</script>
 
   <!-- Incluye el script de Bootstrap y el script para el contador de puntos -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
