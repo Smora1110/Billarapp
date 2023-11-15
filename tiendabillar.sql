@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-11-2023 a las 21:55:13
+-- Tiempo de generación: 16-11-2023 a las 00:26:30
 -- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Versión de PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -224,20 +224,21 @@ CREATE TABLE `usuarios` (
   `clave` varchar(150) NOT NULL,
   `estado` int(11) NOT NULL DEFAULT 1,
   `tiempo_inicio` timestamp NULL DEFAULT NULL,
-  `tiempo_fin` timestamp NULL DEFAULT NULL
+  `tiempo_fin` timestamp NULL DEFAULT NULL,
+  `actual` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre_usuario`, `clave`, `estado`, `tiempo_inicio`, `tiempo_fin`) VALUES
-(1, 'admin', 'admin123', 1, NULL, NULL),
-(2, 'mesa1', 'mesa1', 0, NULL, NULL),
-(3, 'mesa2', 'mesa2', 0, NULL, NULL),
-(4, 'mesa3', 'mesa3', 0, NULL, NULL),
-(5, 'mesa4', 'mesa4', 0, NULL, NULL),
-(6, 'mesa5', 'mesa5', 0, NULL, NULL);
+INSERT INTO `usuarios` (`id`, `nombre_usuario`, `clave`, `estado`, `tiempo_inicio`, `tiempo_fin`, `actual`) VALUES
+(1, 'admin', 'admin123', 1, NULL, NULL, NULL),
+(2, 'mesa1', 'mesa1', 0, '2023-11-15 22:48:37', '2023-11-15 23:10:30', '2023-11-15 23:25:44'),
+(3, 'mesa2', 'mesa2', 0, NULL, NULL, NULL),
+(4, 'mesa3', 'mesa3', 0, NULL, NULL, NULL),
+(5, 'mesa4', 'mesa4', 0, NULL, NULL, NULL),
+(6, 'mesa5', 'mesa5', 0, NULL, NULL, NULL);
 
 --
 -- Índices para tablas volcadas
