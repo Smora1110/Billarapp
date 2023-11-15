@@ -49,6 +49,22 @@ class Pedido
 
         return false;
     }
+    
+
+    
+
+    private function calcularDiferenciaEnMinutos($fechaInicio, $fechaFin)
+    {
+        $fechaInicio = new \DateTime($fechaInicio);
+        $fechaFin = new \DateTime($fechaFin);
+
+        $diferencia = $fechaInicio->diff($fechaFin);
+
+        // Calcular la diferencia total en minutos
+        $diferenciaEnMinutos = $diferencia->days * 24 * 60 + $diferencia->h * 60 + $diferencia->i;
+
+        return $diferenciaEnMinutos;
+    }
 
     public function registrarDetalle($_params)
     {
@@ -162,42 +178,87 @@ class Pedido
 
 
     public function iniciarTiempo($nombreUsuario)
-    {
-        try {
-            // Obtener la fecha y hora actual
-            $fechaHoraInicio = date("Y-m-d H:i:s");
+{
+    try {
+        // Actualizar la base de datos con la fecha y hora de inicio
+        $consulta = $this->cn->prepare("UPDATE usuarios SET tiempo_inicio = CURRENT_TIMESTAMP, tiempo_fin = NULL WHERE nombre_usuario = :nombreUsuario");
+        $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+        $consulta->execute();
+        
+        // Obtener la fecha y hora actual desde la base de datos
+        $consulta = $this->cn->prepare("SELECT tiempo_inicio FROM usuarios WHERE nombre_usuario = :nombreUsuario");
+        $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+        $consulta->execute();
+        $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
 
-            // Actualizar la base de datos con la fecha y hora de inicio
-            $consulta = $this->cn->prepare("UPDATE usuarios SET tiempo_inicio = :fechaHoraInicio, tiempo_fin = NULL WHERE nombre_usuario = :nombreUsuario");
-            $consulta->bindParam(':fechaHoraInicio', $fechaHoraInicio, \PDO::PARAM_STR);
-            $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
-            $consulta->execute();
-        } catch (\PDOException $e) {
-            // Manejar el error de conexión
-            echo "Error de conexión: " . $e->getMessage();
-        }
-
-        return $fechaHoraInicio;
+        // Devolver la fecha y hora de inicio desde la base de datos
+        return $resultado['tiempo_inicio'];
+    } catch (\PDOException $e) {
+        // Manejar el error de conexión
+        echo "Error de conexión: " . $e->getMessage();
     }
+}
 
-    public function detenerTiempo($nombreUsuario)
-    {
-        try {
-            // Obtener la fecha y hora actual
-            $fechaHoraFin = date("Y-m-d H:i:s");
 
-            // Actualizar la base de datos con la fecha y hora de fin
-            $consulta = $this->cn->prepare("UPDATE usuarios SET tiempo_fin = :fechaHoraFin WHERE nombre_usuario = :nombreUsuario");
-            $consulta->bindParam(':fechaHoraFin', $fechaHoraFin, \PDO::PARAM_STR);
-            $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
-            $consulta->execute();
-        } catch (\PDOException $e) {
-            // Manejar el error de conexión
-            echo "Error de conexión: " . $e->getMessage();
-        }
+public function detenerTiempo($nombreUsuario)
+{
+    try {
+        // Actualizar la base de datos con la fecha y hora de fin
+        $consulta = $this->cn->prepare("UPDATE usuarios SET tiempo_fin = CURRENT_TIMESTAMP WHERE nombre_usuario = :nombreUsuario");
+        $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+        $consulta->execute();
+        
+        // Obtener la fecha y hora de fin desde la base de datos
+        $consulta = $this->cn->prepare("SELECT tiempo_fin FROM usuarios WHERE nombre_usuario = :nombreUsuario");
+        $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+        $consulta->execute();
+        $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
 
-        return $fechaHoraFin;
+        // Devolver la fecha y hora de fin desde la base de datos
+        return $resultado['tiempo_fin'];
+    } catch (\PDOException $e) {
+        // Manejar el error de conexión
+        echo "Error de conexión: " . $e->getMessage();
     }
+}
+public function actual($nombreUsuario)
+{
+    try {
+        // Actualizar la base de datos con la fecha y hora de fin
+        $consulta = $this->cn->prepare("UPDATE usuarios SET actual = CURRENT_TIMESTAMP WHERE nombre_usuario = :nombreUsuario");
+        $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+        $consulta->execute();
+        
+        // Obtener la fecha y hora de fin desde la base de datos
+        $consulta = $this->cn->prepare("SELECT actual FROM usuarios WHERE nombre_usuario = :nombreUsuario");
+        $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+        $consulta->execute();
+        $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
+
+        // Devolver la fecha y hora de fin desde la base de datos
+        return $resultado['actual'];
+    } catch (\PDOException $e) {
+        // Manejar el error de conexión
+        echo "Error de conexión: " . $e->getMessage();
+    }
+}
+public function inicio($nombreUsuario)
+{
+    try {
+        
+        $consulta = $this->cn->prepare("SELECT tiempo_inicio FROM usuarios WHERE nombre_usuario = :nombreUsuario");
+        $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+        $consulta->execute();
+        $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
+
+        // Devolver la fecha y hora de fin desde la base de datos
+        return $resultado['tiempo_inicio'];
+    } catch (\PDOException $e) {
+        // Manejar el error de conexión
+        echo "Error de conexión: " . $e->getMessage();
+    }
+}
+
     public function reiniciarTiempo($nombreUsuario)
     {
         try {
@@ -211,6 +272,36 @@ class Pedido
         }
     }
     public function obtenerTiempoTranscurridoActual($nombreUsuario)
+    {
+        try {
+            // Obtener la fecha y hora de inicio y fin desde la base de datos
+            $consulta = $this->cn->prepare("SELECT UNIX_TIMESTAMP(tiempo_inicio) as tiempo_inicio, UNIX_TIMESTAMP(tiempo_fin) as tiempo_fin FROM usuarios WHERE nombre_usuario = :nombreUsuario");
+            $consulta->bindParam(':nombreUsuario', $nombreUsuario, \PDO::PARAM_STR);
+            $consulta->execute();
+            $resultado = $consulta->fetch(\PDO::FETCH_ASSOC);
+
+
+            // Calcular el tiempo transcurrido en segundos
+            if ($resultado && $resultado['tiempo_inicio'] !== null && $resultado['tiempo_fin'] !== null) {
+                $tiempoInicio = $resultado['tiempo_inicio'];
+                $tiempoFin = $resultado['tiempo_fin'];
+
+                // Calcular la diferencia en segundos
+                $tiempoTranscurrido = $tiempoFin - $tiempoInicio;
+
+                // Convertir a minutos
+                $tiempoTranscurridoEnMinutos = round($tiempoTranscurrido / 60);
+
+                return $tiempoTranscurridoEnMinutos;
+            }
+        } catch (\PDOException $e) {
+            // Manejar el error de conexión
+            echo "Error de conexión: " . $e->getMessage();
+        }
+
+        return 0; // Retorna 0 si hay algún problema o no se encuentran datos
+    }
+    public function obtenerTiempo($nombreUsuario)
     {
         try {
             // Obtener la fecha y hora de inicio y fin desde la base de datos
